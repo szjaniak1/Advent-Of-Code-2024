@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 static int horizontal_search(std::vector<std::string>& input_vec, std::string buffer) {
     std::string buffer_cp = buffer; /* could be done with additional "backward" buffer to remove need to call second time with backward string to find*/
@@ -20,6 +21,39 @@ static int horizontal_search(std::vector<std::string>& input_vec, std::string bu
             else {
                 buffer = buffer_cp;
                 if (s == buffer.back()) buffer.pop_back();
+            }
+        }
+    }
+    return result;
+}
+
+static int vertical_search_db(std::vector<std::string>& input_vec, std::string buffer) {
+    std::string buffer_cp = buffer; /* could be done with additional "backward" buffer to remove need to call second time with backward string to find*/
+    std::string buffer_rev;
+    std::reverse_copy(buffer.begin(), buffer.end(), buffer_rev.begin());
+    std::string buffer_rev_cp = buffer_rev;
+    int result = 0;
+    for (size_t col = 0; col < input_vec.size(); ++col) {
+        buffer = buffer_cp;
+        buffer_rev = buffer_rev_cp;
+        for (size_t row = 0; row < input_vec[0].size(); ++row) {
+            if (input_vec[row][col] == buffer.back()) {
+                buffer.pop_back();
+                if (buffer.empty()) {
+                    result++;
+                    buffer = buffer_cp;
+                }
+            }
+            else if (input_vec[row][col] == buffer_rev.back()) {
+                buffer_rev.pop_back();
+                if (buffer_rev.empty()) {
+                    result++;
+                    buffer_rev = buffer_rev_cp;
+                }
+            }
+            else {
+                buffer = buffer_cp;
+                if (input_vec[row][col] == buffer.back()) buffer.pop_back();
             }
         }
     }
