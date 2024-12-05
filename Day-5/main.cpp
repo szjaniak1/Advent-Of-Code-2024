@@ -6,7 +6,23 @@
 #include <string>
 #include <sstream>
 
-static int check_line(std::map<int, std::vector<int>>& rules_map, std::string& line) {
+static int check_line_with_swap(std::map<int, std::vector<int>>& rules_map, std::vector<int>& update_specification) {
+    rerun:
+    for (auto it = update_specification.begin(); it != update_specification.end(); it++) { // func start
+        for (auto next_it = it + 1; next_it != update_specification.end(); next_it++) {
+            if (rules_map.find(*next_it) == rules_map.end()) continue;
+            auto rules = rules_map.at(*next_it);
+            if (std::find(rules.begin(), rules.end(), *it) != rules.end()) {
+                std::iter_swap(it, next_it);       
+                goto rerun;
+            }
+        }
+    }
+
+    return update_specification[update_specification.size() / 2]; // middle number
+}
+
+static std::pair<bool, int> check_line(std::map<int, std::vector<int>>& rules_map, std::string& line) {
     std::stringstream ss(line);
     std::string part;
 
@@ -20,12 +36,12 @@ static int check_line(std::map<int, std::vector<int>>& rules_map, std::string& l
             if (rules_map.find(*next_it) == rules_map.end()) continue;
             auto rules = rules_map.at(*next_it);
             if (std::find(rules.begin(), rules.end(), *it) != rules.end()) {
-                return 0;       
+                return {true, check_line_with_swap(rules_map, update_specification)};       
             }
         }
     }
 
-    return update_specification[update_specification.size() / 2]; // middle number
+    return {false, update_specification[update_specification.size() / 2]}; // middle number
 }
 
 int main(void) {
@@ -53,11 +69,17 @@ int main(void) {
     }
 
     int result = 0;
-    result += check_line(rules_map, line);
+    int result_swap = 0;
+    auto d = check_line(rules_map, line);
+    if (d.first) result_swap += d.second;
+    else result += d.second;
     while (input >> line) {
-        result += check_line(rules_map, line); // already pass transformed line?? or transform in the func scope
+        d = check_line(rules_map, line);
+        if (d.first) result_swap += d.second;
+        else result += d.second;
     }
 
     std::cout << "part 1 result: " << result << std::endl;
+    std::cout << "part 2 result: " << result_swap << std::endl;
     return 0;
 }
