@@ -8,7 +8,7 @@
 
 static int check_line_with_swap(std::map<int, std::vector<int>>& rules_map, std::vector<int>& update_specification) {
     rerun:
-    for (auto it = update_specification.begin(); it != update_specification.end(); it++) { // func start
+    for (auto it = update_specification.begin(); it != update_specification.end(); it++) {
         for (auto next_it = it + 1; next_it != update_specification.end(); next_it++) {
             if (rules_map.find(*next_it) == rules_map.end()) continue;
             auto rules = rules_map.at(*next_it);
@@ -19,7 +19,7 @@ static int check_line_with_swap(std::map<int, std::vector<int>>& rules_map, std:
         }
     }
 
-    return update_specification[update_specification.size() / 2]; // middle number
+    return update_specification[update_specification.size() / 2];
 }
 
 static std::pair<bool, int> check_line(std::map<int, std::vector<int>>& rules_map, std::string& line) {
@@ -31,7 +31,7 @@ static std::pair<bool, int> check_line(std::map<int, std::vector<int>>& rules_ma
         update_specification.push_back(std::stoi(part));
     }
 
-    for (auto it = update_specification.begin(); it != update_specification.end(); it++) { // func start
+    for (auto it = update_specification.begin(); it != update_specification.end(); it++) {
         for (auto next_it = it + 1; next_it != update_specification.end(); next_it++) {
             if (rules_map.find(*next_it) == rules_map.end()) continue;
             auto rules = rules_map.at(*next_it);
@@ -41,7 +41,7 @@ static std::pair<bool, int> check_line(std::map<int, std::vector<int>>& rules_ma
         }
     }
 
-    return {false, update_specification[update_specification.size() / 2]}; // middle number
+    return {false, update_specification[update_specification.size() / 2]};
 }
 
 int main(void) {
@@ -52,7 +52,7 @@ int main(void) {
     }
     
     std::string line;
-    std::map<int, std::vector<int>> rules_map; // or set? or unordered__??
+    std::map<int, std::vector<int>> rules_map;
     while (input >> line && line.size() == 5) {
         size_t delimiter = line.find('|');
         int key = std::stoi(line.substr(0, delimiter));
