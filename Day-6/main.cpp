@@ -61,37 +61,25 @@ static bool go_right_check(std::vector<std::string>& map, std::vector<std::vecto
 static bool try_left_obstacle_go_up(std::vector<std::string> map, std::vector<std::vector<uint8_t>> map_direction, size_t pos_x, size_t pos_y) {
     if (map_direction[pos_y][pos_x - 1] != none || map[pos_y][pos_x - 1] == '#') return false;
     map[pos_y][pos_x - 1] = '#';
-    bool check = go_up_check(map, map_direction, pos_x, pos_y);
-    if (!check) return false;
-    std::cout << pos_y << " " << pos_x - 1 << std::endl;
-    return true;
+    return go_up_check(map, map_direction, pos_x, pos_y);
 }
 
 static bool try_down_obstacle_go_left(std::vector<std::string> map, std::vector<std::vector<uint8_t>> map_direction, size_t pos_x, size_t pos_y) {
     if (map_direction[pos_y + 1][pos_x] != none || map[pos_y + 1][pos_x] == '#') return false;
     map[pos_y + 1][pos_x] = '#';
-    bool check =  go_left_check(map, map_direction, pos_x, pos_y);
-    if (!check) return false;
-    std::cout << pos_y + 1<< " " << pos_x << std::endl;
-    return true;
+    return go_left_check(map, map_direction, pos_x, pos_y);
 }
 
 static bool try_right_obstacle_go_down(std::vector<std::string> map, std::vector<std::vector<uint8_t>> map_direction, size_t pos_x, size_t pos_y) {
     if (map_direction[pos_y][pos_x + 1] != none || map[pos_y][pos_x + 1] == '#') return false;
     map[pos_y][pos_x + 1] = '#';
-    bool check = go_down_check(map, map_direction, pos_x, pos_y);
-    if (!check) return false;
-    std::cout << pos_y << " " << pos_x + 1 << std::endl;
-    return true;
+    return go_down_check(map, map_direction, pos_x, pos_y);
 }
 
 static bool try_up_obstacle_go_right(std::vector<std::string> map, std::vector<std::vector<uint8_t>> map_direction, size_t pos_x, size_t pos_y) {
     if (map_direction[pos_y - 1][pos_x] != none || map[pos_y - 1][pos_x] == '#') return false;
     map[pos_y - 1][pos_x] = '#';
-    bool check = go_right_check(map, map_direction, pos_x, pos_y);
-    if (!check) return false;
-    std::cout << pos_y - 1<< " " << pos_x << std::endl;
-    return true;
+    return go_right_check(map, map_direction, pos_x, pos_y);
 }
 
 // functions that go through route and look for every possible obstacle
