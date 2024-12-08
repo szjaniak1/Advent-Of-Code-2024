@@ -83,7 +83,7 @@ int main(void) {
         uint64_t temp_result = try_add(test_value, 0, values, 0);        
         if (temp_result == test_value) {
             result += test_value;
-            std::cout << "FOUND: " << test_value << std::endl;
+            // std::cout << "FOUND: " << test_value << std::endl;
         }
     }
     
