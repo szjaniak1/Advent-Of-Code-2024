@@ -12,6 +12,7 @@
 static inline int64_t calc_checksum(std::vector<int64_t>& disk_map) {
     int64_t checksum = 0;
     for (size_t i = 0; i < disk_map.size(); i++) {
+        if (disk_map[i] == -1) continue;
         checksum += i * disk_map[i];
     }
     return checksum;
@@ -30,8 +31,6 @@ static inline std::map<std::pair<std::vector<int64_t>::iterator, std::vector<int
                 block_size++;
                 it++;
             } while (it != disk_map.end() && *it == -1);
-            assert(*(it - 1) == -1);
-            assert(*(it_cp) == -1);
             empty_spaces.insert({{it_cp, it - 1}, block_size});
         }
     }
@@ -47,7 +46,7 @@ static inline void print_map(std::vector<int64_t>& map) {
 }
 
 int main(void) {
-    std::fstream input{"test_input.txt"};
+    std::fstream input{"input.txt"};
     if (!input.is_open()) {
         std::cerr << "err - couldn't open a file" << std::endl;
     }
@@ -86,45 +85,35 @@ int main(void) {
         std::cout << "part 1 result: " << calc_checksum(disk_map_p1) << std::endl;
     }
 
-    print_map(disk_map);
-
     size_t block_len;
     int64_t curr_id;
     auto empty_spaces = map_empty_spaces(disk_map);
-    for (auto it = disk_map.rbegin() + 1; it != disk_map.rend(); ++it) {
+    for (auto it = disk_map.rbegin(); it != disk_map.rend(); ++it) {
         curr_id = *it;
-        block_len = 1;
+        if (curr_id == -1) continue;
+        block_len = 0;
         do {
             ++it;
             block_len++;
         } while (it != disk_map.rend() && *it == curr_id);
+        it--;
 
         auto found_block = std::find_if(empty_spaces.begin(), empty_spaces.end(),
         [it, block_len](auto& eblock) {
-            return eblock.first.second <= it.base() && block_len <= eblock.second;
+            return eblock.first.second <= it.base() - 1 && block_len <= eblock.second;
         });
 
         if (found_block != empty_spaces.end()) {
-            disk_map.erase(found_block->first.first, found_block->first.second);
-            print_map(disk_map);
-            disk_map.insert(found_block->first.first, it - block_len - 1, it - 1);
-            disk_map.erase(it.base() + 1, it.base() + block_len + 1);
-            print_map(disk_map);
+            disk_map.erase(it.base() - 1, it.base() - 1 + block_len);
+            disk_map.insert(it.base() -  1, block_len, -1);
+            disk_map.erase(found_block->first.first, found_block->first.first + block_len);
+            disk_map.insert(found_block->first.first, block_len, curr_id);
             empty_spaces.erase(found_block);
             if (found_block->second > block_len) empty_spaces.insert({{found_block->first.first + block_len, found_block->first.second}, found_block->second - block_len});
-            std::cout << "GOWNO\n";
         }
-
-        while (it != disk_map.rend() && *it == -1) ++it;
-        if (it == disk_map.rend()) break;
     }
 
-    for (auto d : disk_map) {
-        std::cout << d;
-    }
-    std::cout << std::endl;
-
-    // std::cout << "part 1 result: " << calc_checksum(disk_map) << std::endl;
+    std::cout << "part 2 result: " << calc_checksum(disk_map) << std::endl;
 
     return 0;
 }
