@@ -12,7 +12,7 @@ static uint go_next(std::vector<std::vector<uint>>& topo_map, size_t row, size_t
     uint result = 0;
     int val = (int)topo_map[row][col];
     if (val == 9) {
-        topo_map[row][col] = 10;
+        // topo_map[row][col] = 10; // lol uncomment to part 1 
         return 1;
     }
     if (col < topo_map[0].size() - 1 && int(topo_map[row][col + 1]) - val == 1) result += go_next(topo_map, row, col + 1);
